@@ -5,9 +5,8 @@ import { Card } from "@/components/ui/card";
 import { IssueTableFilters } from "./IssueTableFilters";
 import { IssueTableRow } from "./IssueTableRow";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Pagination } from "@/components/ui/pagination";
 
 export function IssueTable() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -110,39 +109,48 @@ export function IssueTable() {
         
         {/* Pagination */}
         {filteredIssues.length > 0 && (
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4">
             <p className="text-sm text-gray-500">
               Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredIssues.length)} of {filteredIssues.length} issues
             </p>
             
-            <Pagination>
-              <Pagination.Content>
-                <Pagination.Item>
-                  <Pagination.Previous
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                  />
-                </Pagination.Item>
-                
+            <nav className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="h-8 w-8 p-0"
+              >
+                <span className="sr-only">Go to previous page</span>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              
+              <div className="flex items-center gap-1">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <Pagination.Item key={page}>
-                    <Pagination.Link 
-                      isActive={page === currentPage}
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </Pagination.Link>
-                  </Pagination.Item>
+                  <Button
+                    key={page}
+                    variant={page === currentPage ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(page)}
+                    className="h-8 w-8 p-0"
+                  >
+                    {page}
+                  </Button>
                 ))}
-                
-                <Pagination.Item>
-                  <Pagination.Next
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                  />
-                </Pagination.Item>
-              </Pagination.Content>
-            </Pagination>
+              </div>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="h-8 w-8 p-0"
+              >
+                <span className="sr-only">Go to next page</span>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </nav>
           </div>
         )}
       </Card>
